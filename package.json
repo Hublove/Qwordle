@@ -26,6 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"canvas": "^2.11.2",
+		"check-if-word": "^1.2.1",
 		"konva": "^9.2.0",
 		"svelte-konva": "^0.3.1"
 	}
