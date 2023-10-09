@@ -60,20 +60,15 @@
             let dice = DiceSet[i];
 
             if (haveIntersection(temp_config, dice) && id != i) {
-                console.log("a")
 
                 config.x = old_x
-                console.log(config.x)
 
                 textConfig.x = old_x
                 config.y = old_y
-                console.log(config.y)
 
                 textConfig.y = old_y
-                console.log(BoardState)
                 break;
             } else {
-                console.log("b")
                 config.x = Math.round(shape.attrs.x / padding) * padding
                 config.y = Math.round(shape.attrs.y / padding) * padding
                 textConfig.x = Math.round(shape.attrs.x / padding) * padding
@@ -83,7 +78,6 @@
                     BoardState[config.x / padding][config.y / padding] = id
                 }
                 
-                console.log(BoardState)
                 
             }
         }
@@ -113,7 +107,6 @@
         e.detail.cancelBubble = true;
         shadowConfig.visible = false
 
-        console.log(config)
 
     }
 

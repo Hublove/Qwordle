@@ -1,9 +1,24 @@
 <script>
     import { Stage, Layer, Rect, Line } from 'svelte-konva';
     import { onMount } from 'svelte';
+    import Modal from 'svelte-simple-modal';
+    import Content from '$lib/Content.svelte';
     import Dice from '$lib/dice.svelte';
     import { VALID_WORDS } from '../constants.js'
 
+    let gameState = {gameOver: false}
+    let howToPlay = {gameOver: false}
+
+    function change_State() {
+        // console.log(gameState.gameOver)
+        gameState.gameOver = true
+    }
+    function displayHowToPlay() {
+        // console.log(gameState.gameOver)
+        howToPlay.gameOver = true
+    }
+
+    let showModal 
     let height
     let width
     let stageHeight
@@ -27,7 +42,6 @@
         ['A', 'E', 'I', 'O', 'U', 'U'],
         ['A', 'A', 'E', 'E', 'O', 'O']
     ]
-
     
     
 
@@ -36,15 +50,43 @@
 
     let shadowRect
     let color_count = 0
+    let oldCount = 0
+    
+    
     $: {
+        console.log(color_count)
+        // if (gameState.gameOver == false) {
+        oldCount = color_count
+        color_count = 0
+        
         DiceSet.forEach(d => {
             if (d.fill == "orange") {
                 color_count += 1
+                console.log(color_count)
+                console.log("a")
+
 
             }
         });
-        if (color_count == 12) {
+        if (color_count == 3 && color_count > oldCount) {
+            change_State()
         }
+        // } else {
+        //     color_count = 0
+
+        //     DiceSet.forEach(d => {
+        //         if (d.fill == "orange") {
+        //             color_count += 1
+        //         }
+        //     });
+        //     if (color_count == 3) {
+        //         change_State()
+        //     }
+
+        // }
+
+        
+            
     }
     
 
@@ -78,10 +120,11 @@
             BoardState[i] = Array(8).fill(-1)
             BoardState[i][0] = i
         }
-        
 
-        console.log(VALID_WORDS.has("yes"))
+        displayHowToPlay()
+
 	});
+
 
 </script>
 
@@ -89,12 +132,22 @@
 
 
 
-<div class="">
-    <div>
-        dsaas
-    </div>
-    <div class="h-screen flex justify-center items-center">
-        <Stage class="border w-min" config={{ width: stageWidth, height: stageHeight}}>
+<div class="h-screen flex flex-col justify-start  items-center ">
+    <h1 on:click={change_State} class="text-4xl font-bold pt-6" >
+        Qwordle
+    </h1>
+    
+
+
+    <Modal>
+        <Content gameState={howToPlay} modal={"HowToPlay"}/>
+    </Modal>
+
+    <Modal>
+        <Content bind:gameState={gameState} modal={"GameOver"}/>
+    </Modal>
+    <div class="h-full flex flex-col justify-center">
+        <Stage class="border" config={{ width: stageWidth, height: stageHeight}}>
             <Layer>
                 {#each {length: (width / padding) - 1} as _, i}
                     <Line
