@@ -6,6 +6,7 @@
     import GameOverModal from './GameOverModal.svelte';
     const { open } = getContext('simple-modal');
 
+    export let leaderboard = {}
     export let gameState
     export let modal
 
@@ -16,7 +17,7 @@
             open(HowToPlayModal, {})
             
         } else if (modal == "GameOver") {
-            open(GameOverModal, {})
+            open(GameOverModal, {leaderboard: leaderboard})
         }
     }
     

@@ -6,11 +6,21 @@
     import Dice from '$lib/dice.svelte';
     import { VALID_WORDS } from '../constants.js'
 
+    export let data
+
     let gameState = {gameOver: false}
     let howToPlay = {gameOver: false}
 
-    function change_State() {
-        // console.log(gameState.gameOver)
+    async function change_State() {
+        const response = await fetch('/updateLeaderboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({longestWord: "hehe", length: 4}),
+            });
+            console.log(response)
+        
         gameState.gameOver = true
     }
     function displayHowToPlay() {
@@ -18,6 +28,8 @@
         howToPlay.gameOver = true
     }
 
+    let tempWord = ""
+    let longestWord = "" 
     let showModal 
     let height
     let width
@@ -68,9 +80,18 @@
 
             }
         });
+
+        if (tempWord.length >= longestWord.length) {
+            longestWord = tempWord
+            console.log("YEEPEE")
+            console.log(longestWord)
+        }
+
         if (color_count == 3 && color_count > oldCount) {
             change_State()
+            
         }
+
         // } else {
         //     color_count = 0
 
@@ -85,6 +106,7 @@
 
         // }
 
+        
         
             
     }
@@ -136,15 +158,17 @@
     <h1 on:click={change_State} class="text-4xl font-bold pt-6" >
         Qwordle
     </h1>
-    
-
+    <!-- <p>{data.props}</p> -->
+    <form action="/logout" method="POST">
+        <button type="submit" class="w-full text-start">Logout</button>
+    </form>
 
     <Modal>
         <Content gameState={howToPlay} modal={"HowToPlay"}/>
     </Modal>
 
     <Modal>
-        <Content bind:gameState={gameState} modal={"GameOver"}/>
+        <Content bind:gameState={gameState} modal={"GameOver"} leaderboard={data.props}/>
     </Modal>
     <div class="h-full flex flex-col justify-center">
         <Stage class="border" config={{ width: stageWidth, height: stageHeight}}>
@@ -179,7 +203,7 @@
                 {#each DiceSet as dice, index}
                     <Dice bind:config={dice} bind:shadowConfig={shadowConfig} id={index} height={stageHeight} width={stageWidth} {padding} {letters} {DiceSet} {BoardState} letter={letters[index]}/>
                 {/each}
-                <Rect bind:handle={shadowConfig.handle} bind:this={shadowRect} config={shadowConfig} />
+                <Rect bind:tempWord={tempWord} bind:handle={shadowConfig.handle} bind:this={shadowRect} config={shadowConfig} />
             </Layer>
         </Stage>
     </div>

@@ -12,6 +12,7 @@
     export let width
     export let height
     export let BoardState
+    export let tempWord
 
 
     let old_x
@@ -123,8 +124,12 @@
                         console.log(wordIDs[c])
                         DiceSet[wordIDs[c]].fill = "orange"
                     }
-                }
+                    tempWord = word
+                    console.log(tempWord)
 
+
+                }
+                
                 word = ""
                 wordIDs = []
 
@@ -142,6 +147,8 @@
             for (let c = 0; c < wordIDs.length; c++) {
                 console.log(wordIDs[c])
                 DiceSet[wordIDs[c]].fill = "orange"
+                tempWord = word
+                console.log(tempWord)
             }
         }
     }    
