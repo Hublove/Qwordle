@@ -32,6 +32,3 @@ npm install
 ```sh
 npm run dev
 ```
-
-## License
-[Include the project's license information]
