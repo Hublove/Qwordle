@@ -16,7 +16,7 @@ Qwordle is a web-based game based on the dice game called Q-less. It utilizes Ko
 1. Clone the repository
    ```sh
    git clone https://github.com/your-username/Qwordle.git
-   
+   ```
 2. Navigate to the project directory
 
 ```sh
