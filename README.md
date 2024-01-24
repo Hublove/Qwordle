@@ -1,38 +1,39 @@
-# create-svelte
+# Qwordle
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Qwordle is a web-based game based on the dice game called Q-less. It utilizes Konva for 2D graphics, Pocketbase for the database, and SvelteKit for the web framework.
 
-## Creating a project
+## Features
+- [Feature 1]
+- [Feature 2]
+- [Feature 3]
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Technologies Used
+- Konva for 2D graphics
+- Pocketbase for the database
+- SvelteKit for the web framework
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Installation
+1. Clone the repository
+   ```sh
+   git clone https://github.com/your-username/Qwordle.git
+2. Navigate to the project directory
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+3. Install the dependencies
 
-## Developing
+4. Start the development server
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-```bash
-npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
 
-## Building
 
-To create a production version of your app:
+## Usage
+[Include usage instructions here]
 
-```bash
-npm run build
-```
+## Contributing
+[Include information on how to contribute to the project]
 
-You can preview the production build with `npm run preview`.
+## License
+[Include the project's license information]
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Acknowledgements
+[Include any acknowledgements or credits for third-party assets, libraries, or tools used in the project]
