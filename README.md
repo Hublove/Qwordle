@@ -1,11 +1,11 @@
 # Qwordle
 
-Qwordle is a web-based game based on the dice game called Q-less. It utilizes Konva for 2D graphics, Pocketbase for the database, and SvelteKit for the web framework.
+Qwordle is a web game based on the dice game called Q-less.
 
 ## Features
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+- Leaderboard
+- Daily puzzle [IN PROGRESS]
+- Login for game history and friends [IN PROGRESS]
 
 ## Technologies Used
 - Konva for 2D graphics
@@ -15,7 +15,7 @@ Qwordle is a web-based game based on the dice game called Q-less. It utilizes Ko
 ## Installation
 1. Clone the repository
 ```sh
-git clone https://github.com/your-username/Qwordle.git
+git clone https://github.com/Hublove/Qwordle.git
 ```
 2. Navigate to the project directory
 
@@ -33,15 +33,5 @@ npm install
 npm run dev
 ```
 
-
-## Usage
-[Include usage instructions here]
-
-## Contributing
-[Include information on how to contribute to the project]
-
 ## License
 [Include the project's license information]
-
-## Acknowledgements
-[Include any acknowledgements or credits for third-party assets, libraries, or tools used in the project]
