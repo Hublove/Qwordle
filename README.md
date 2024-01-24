@@ -21,17 +21,17 @@ Qwordle is a web-based game based on the dice game called Q-less. It utilizes Ko
 
 ```sh
 cd Qwordle
-
+```
 3. Install the dependencies
 
 ```sh
 npm install
-
+```
 4. Start the development server
 
 ```sh
 npm run dev
-
+```
 
 
 ## Usage
