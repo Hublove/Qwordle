@@ -19,15 +19,18 @@ Qwordle is a web-based game based on the dice game called Q-less. It utilizes Ko
    
 2. Navigate to the project directory
 
-```cd Qwordle
+```sh
+cd Qwordle
 
 3. Install the dependencies
 
-```npm install
+```sh
+npm install
 
 4. Start the development server
 
-```npm run dev
+```sh
+npm run dev
 
 
 
