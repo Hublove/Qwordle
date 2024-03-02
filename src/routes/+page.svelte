@@ -11,13 +11,34 @@
     let gameState = {gameOver: false}
     let howToPlay = {gameOver: false}
 
+    function findLongestWord(words) {
+        if (words.length === 0) {
+            return null; // Handle the case when the array is empty
+        }
+
+        let longestWord = words[0]; // Assume the first word is the longest
+
+        for (let i = 1; i < words.length; i++) {
+            if (words[i].length > longestWord.length) {
+                longestWord = words[i]; // Update if a longer word is found
+            }
+        }
+
+        return longestWord;
+    }
+
     async function change_State() {
+        let words = []
+        DiceSet.forEach(dice => {
+            words.push(dice.longestWord)
+        });
+        longestWord = findLongestWord(words)
         const response = await fetch('/updateLeaderboard', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({longestWord: "hehe", length: 4}),
+                body: JSON.stringify({longestWord: longestWord, length: longestWord.length}),
             });
             console.log(response)
         
@@ -30,6 +51,7 @@
 
     let tempWord = ""
     let longestWord = "" 
+    let longestWords = [] 
     let showModal 
     let height
     let width
@@ -89,6 +111,17 @@
 
         if (color_count == 3 && color_count > oldCount) {
             change_State()
+            fetch('/updateLeaderboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "longestWord": longestWord, 
+                    "length": 3
+                })
+            })
+
             
         }
 
@@ -122,8 +155,9 @@
         stageWidth = padding*12
         for (let i = 0; i < 12; i++) {
             let new_x = i * padding
-            DiceSet[i] = { x: new_x, y: 0, width: padding, height: padding, fill: 'blue', draggable: true, strokeWidth: 1, stroke: "black" }
+            DiceSet[i] = { x: new_x, y: 0, width: padding, height: padding, fill: 'blue', draggable: true, strokeWidth: 1, stroke: "black", longestWord: "" }
             letters[i] = DICE_LETTERS[i][Math.floor(Math.random()*DICE_LETTERS[i].length)];
+            longestWords[i] = ""
         }
         shadowConfig = {
             x: 0,
@@ -201,9 +235,9 @@
                 <!-- <Rect on:dragmove={handleShadowMove} on:dragend={handleSnap} on:dragstart={handleShadowStart} config={config} /> -->
                 
                 {#each DiceSet as dice, index}
-                    <Dice bind:config={dice} bind:shadowConfig={shadowConfig} id={index} height={stageHeight} width={stageWidth} {padding} {letters} {DiceSet} {BoardState} letter={letters[index]}/>
+                    <Dice bind:config={dice} bind:shadowConfig={shadowConfig} id={index} height={stageHeight} width={stageWidth} {padding} {letters} {DiceSet} {BoardState} letter={letters[index]} longestWord={longestWords[index]}/>
                 {/each}
-                <Rect bind:tempWord={tempWord} bind:handle={shadowConfig.handle} bind:this={shadowRect} config={shadowConfig} />
+                <Rect bind:handle={shadowConfig.handle} bind:this={shadowRect} config={shadowConfig} />
             </Layer>
         </Stage>
     </div>

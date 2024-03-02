@@ -12,7 +12,7 @@
     export let width
     export let height
     export let BoardState
-    export let tempWord
+    export let longestWord = ""
 
 
     let old_x
@@ -87,15 +87,31 @@
         // console.log(VALID_WORDS)
         //Checking x axis for valid word
         
+        let word = ""
+
         for (let j = 0; j < 12; j++) {
             DiceSet[j].fill = "blue"
         }
         for (let y_index = 0; y_index < 8; y_index++) {
-            check_x_axis(y_index)
+            word = check_x_axis(y_index)
+            console.log("word")
+            console.log(word)
+            if (word.length >= longestWord.length) {
+                longestWord = word
+            }
         }
         for (let x_index = 0; x_index < 12; x_index++) {
-            check_y_axis(x_index)
+            word = check_y_axis(x_index)
+            console.log("word")
+            console.log(word)
+            
+            if (word.length >= longestWord.length) {
+                longestWord = word
+            }
         }
+        console.log("longestWord")
+        console.log(longestWord)
+        config.longestWord = longestWord
         
         //Checking y axis for valid word
         // for (let j = 0; j < 8; j++) {
@@ -115,6 +131,9 @@
         let word = ""
         let wordIDs = []
 
+        let longestWord = ""
+
+
         for (let j = 0; j < 8; j++) {
 
             if (BoardState[x][j] == -1) {
@@ -124,10 +143,11 @@
                         console.log(wordIDs[c])
                         DiceSet[wordIDs[c]].fill = "orange"
                     }
-                    tempWord = word
-                    console.log(tempWord)
+                    
 
-
+                    if (word.length >= longestWord.length) {
+                        longestWord = word
+                    }
                 }
                 
                 word = ""
@@ -147,15 +167,18 @@
             for (let c = 0; c < wordIDs.length; c++) {
                 console.log(wordIDs[c])
                 DiceSet[wordIDs[c]].fill = "orange"
-                tempWord = word
-                console.log(tempWord)
+                
             }
         }
+
+        return longestWord
     }    
 
     function check_x_axis(y) {
         let word = ""
         let wordIDs = []
+
+        let longestWord = ""
 
         for (let j = 0; j < 12; j++) {
 
@@ -167,7 +190,12 @@
                         console.log(wordIDs[c])
                         DiceSet[wordIDs[c]].fill = "orange"
                     }
+                    if (word.length >= longestWord.length) {
+                        longestWord = word
+                    }
                 }
+                
+                
 
                 word = ""
                 wordIDs = []
@@ -186,6 +214,7 @@
                 DiceSet[wordIDs[c]].fill = "orange"
             }
         }
+        return longestWord
     }
 
     function handleShadowStart(e) {

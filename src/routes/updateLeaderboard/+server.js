@@ -4,6 +4,8 @@ import { json } from '@sveltejs/kit';
 export async function POST({ locals, request }) {
 	const { longestWord, length } = await request.json();
     try {
+        
+
         const record = await locals.pb.collection('solutions').getOne(locals.user.id, {
         
         });
@@ -11,12 +13,16 @@ export async function POST({ locals, request }) {
         console.log(err);
 
         if (err?.data?.code == 404) {
+            
             const data = {
                 "id": locals.user.id,
                 "username": locals.user.username,
                 "longestWord": longestWord,
                 "length": length
             };
+            console.log("==========================================");
+            console.log(data);
+            console.log("==========================================");
             const record = await locals.pb.collection('solutions').create(data);
 
 
