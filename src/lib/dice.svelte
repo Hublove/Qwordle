@@ -36,10 +36,10 @@
     function haveIntersection(dice_1, dice_2) {
         let buffer = 2
         return !(
-          dice_2.x > dice_1.x + dice_1.width - buffer ||
-          dice_2.x + dice_2.width - buffer < dice_1.x ||
-          dice_2.y > dice_1.y + dice_1.height  - buffer||
-          dice_2.y + dice_2.height - buffer< dice_1.y
+            dice_2.x > dice_1.x + dice_1.width - buffer ||
+            dice_2.x + dice_2.width - buffer < dice_1.x ||
+            dice_2.y > dice_1.y + dice_1.height  - buffer||
+            dice_2.y + dice_2.height - buffer< dice_1.y
         );
       }
 

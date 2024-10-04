@@ -6,10 +6,40 @@
     import Dice from '$lib/dice.svelte';
     import { VALID_WORDS } from '../constants.js'
 
+    let isOpen = true;
+    let isUsernameOpen = true;
+  
+    function closeModal() {
+        isOpen = !isOpen; // Toggle the visibility state
+    }
+
+    function closeGameOver() {
+        gameState.gameOver = !gameState.gameOver; // Toggle the visibility state
+        isUsernameOpen = true
+    }
+
+    function closeUsernameModal() {
+        isUsernameOpen = !isUsernameOpen; // Toggle the visibility state
+    }
+
+    let playerUsername = ""
+    
+    async function handleSubmit(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        console.log(playerUsername)
+        closeUsernameModal()
+        
+
+    }
+
+
+
     export let data
 
     let gameState = {gameOver: false}
     let howToPlay = {gameOver: false}
+    let leaderboard = {}
 
     function findLongestWord(words) {
         if (words.length === 0) {
@@ -33,7 +63,7 @@
             words.push(dice.longestWord)
         });
         longestWord = findLongestWord(words)
-        const response = await fetch('/updateLeaderboard', {
+        const response = await fetch('http://localhost:8000/putSolution', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,6 +71,28 @@
                 body: JSON.stringify({longestWord: longestWord, length: longestWord.length}),
             });
             console.log(response)
+        
+        try {
+            const response = await fetch("http://localhost:8000/getLeaderboard", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                leaderboard = result.props.leaderboard
+                console.log('API Response:', result);
+                // Handle successful API response
+            } else {
+                console.error('API Call Failed:', response.status);
+                // Handle errors
+            }
+        } catch (error) {
+            console.error('Error making API call:', error);
+            // Handle network errors or other issues
+        }
         
         gameState.gameOver = true
     }
@@ -111,16 +163,16 @@
 
         if (color_count == 3 && color_count > oldCount) {
             change_State()
-            fetch('/updateLeaderboard', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "longestWord": longestWord, 
-                    "length": 3
-                })
-            })
+            // fetch('/updateLeaderboard', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         "longestWord": longestWord, 
+            //         "length": 3
+            //     })
+            // })
 
             
         }
@@ -193,17 +245,20 @@
         Qwordle
     </h1>
     <!-- <p>{data.props}</p> -->
-    <form action="/logout" method="POST">
+    <!-- <form action="/logout" method="POST">
         <button type="submit" class="w-full text-start">Logout</button>
-    </form>
+    </form> -->
 
-    <Modal>
+    <!-- <Modal>
         <Content gameState={howToPlay} modal={"HowToPlay"}/>
     </Modal>
 
     <Modal>
         <Content bind:gameState={gameState} modal={"GameOver"} leaderboard={data.props}/>
-    </Modal>
+    </Modal> -->
+
+    
+
     <div class="h-full flex flex-col justify-center">
         <Stage class="border" config={{ width: stageWidth, height: stageHeight}}>
             <Layer>
@@ -241,4 +296,187 @@
             </Layer>
         </Stage>
     </div>
+
+    {#if isOpen}
+        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+            <div class="relative p-4 w-full max-w-lg h-full md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex justify-between items-start p-4 rounded-t border-b">
+                    <h3 class="text-xl font-semibold">How To Play</h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" on:click={closeModal}>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <p class="text-base leading-relaxed">
+                        Use ALL 12 letters from the dice roll of the day to make words that connect. Words must have at least 3 letters. No proper nouns. Most rolls are solvable but not all.
+                    </p>
+                </div>
+                <!-- Modal footer -->
+                <!-- <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200">
+                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" on:click={closeModal}>I understand</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+  {/if}
+
+  
+
+
+
+  {#if gameState.gameOver}
+    {#if isUsernameOpen}
+        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+            <div class="relative p-4 w-full max-w-lg h-full md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex justify-between items-start p-4 rounded-t border-b">
+                    <h3 class="text-xl font-semibold">Submit Score?</h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" on:click={closeUsernameModal}>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form on:submit={handleSubmit} class="mt-8 grid grid-cols-6 gap-6">
+            
+  
+                        <div class="col-span-6">
+                          <label
+                            for="Email"
+                            class="block text-sm font-medium text-gray-700 "
+                          >
+                            Username
+                          </label>
+              
+                          <input
+                            type="text"
+                            id="Username"
+                            name="username"
+                            bind:value={playerUsername} 
+                            class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                          />
+                        </div>
+
+              
+                        <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
+                          <button
+                            class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 "
+                          >
+                            Skip
+                          </button>
+
+                          <button
+                            class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 "
+                          >
+                            Submit
+                          </button>
+              
+                          
+                        </div>
+                      </form>
+                </div>
+                <!-- Modal footer -->
+                <!-- <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200">
+                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" on:click={closeModal}>I understand</button>
+                </div> -->
+            </div>
+        </div>
+        </div>
+    {/if}
+    {#if !isUsernameOpen}
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+                <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-start p-4 rounded-t border-b">
+                        <h3 class="text-xl font-semibold">How To Play</h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" on:click={closeGameOver}>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6 space-y-6">
+                        <section class="overflow-hidden rounded-lg ">
+                            <div class=" max-w-full p-4 text-center sm:p-6 md:col-span-2 lg:p-8">
+                                <!-- <p class="text-sm font-semibold uppercase tracking-widest">
+                                    Run with the pack
+                                </p> -->
+                            
+                                <h2 class="mt-6 mb-4 font-black uppercase">
+                                    <span class="text-4xl font-black sm:text-5xl lg:text-6xl">
+                                    GAME OVER
+                                    </span>
+                            
+                                    <span class="mt-2 block text-sm">YOU SOLVED THE GAME!</span>
+                                </h2>
+                            
+                            <!--
+                        Heads up! 👋
+                        
+                        This component comes with some `rtl` classes. Please remove them if they are not needed in your project.
+                        -->
+                        
+                            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                                <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                                <thead class="ltr:text-left rtl:text-right">
+                                    <tr>
+                                        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                            Username
+                                        </th>
+                                        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                            Longest Word
+                                        </th>
+                                        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                            Word Length
+                                        </th>
+                                        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                            Solution
+                                        </th>
+                                    </tr>
+                                </thead>
+                            
+                                <tbody class="divide-y divide-gray-200">
+                                    {#each leaderboard as row (row)}
+                                        <tr>
+                                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                                {row.username}
+                                            </td>
+                                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">{row.longestWord}</td>
+                                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">{row.length}</td>
+                                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                                <a
+                                                    href="#"
+                                                    class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                                                >
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {/each}
+                                    
+                            
+                                    
+                                </tbody>
+                                </table>
+                            </div>
+                        
+                            </div>
+                        </section>
+                    </div>
+                    <!-- Modal footer -->
+                    <!-- <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200">
+                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" on:click={closeModal}>I understand</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    {/if}
+  {/if}
 </div>

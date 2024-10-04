@@ -69,18 +69,5 @@
         </table>
     </div>
 
-      <!-- <a
-        class="mt-8 inline-block w-full bg-black py-4 text-sm font-bold uppercase tracking-widest text-white"
-        href=""
-      >
-        POST YOUR SOLUTION
-      </a> -->
-      <!-- <form action="/getLeaderboard" method="GET">
-        <button type="submit" class="w-full text-start">POST YOUR SOLUTION</button>
-      </form> -->
-  
-      <!-- <p class="mt-8 text-xs font-medium uppercase text-gray-400">
-        Offer valid until 24th March, 2021 *
-      </p> -->
     </div>
 </section>
